@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+ Mini Motor de IA
+Un sistema sencillo que responde preguntas basándose en archivos de texto locales.
 
-## Getting Started
+ ---------¿Qué hace esto?
 
-First, run the development server:
+Lee archivos .txt de la carpeta `/data`, los divide en pedazos, genera embeddings y responde preguntas usando IA.
 
-```bash
+---------Cómo correrlo
+
+1. Clona el repo:
+git clone https://github.com/Stephtor29/mini-motorDeIA.git
+cd mini-motorDeIA/ai-backend-project
+
+2. Instala las dependencias:
+npm install
+
+3. Crea un archivo `.env.local` con tu API key de Groq:
+
+AI_API_KEY=tu_key_aqui
+AI_BASE_URL=https://api.groq.com/openai/v1
+
+4. Corre el proyecto:
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---------Variables de entorno necesarias
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `AI_API_KEY` - (gratis en console.groq.com)
+- `AI_BASE_URL` - La URL de la API de Groq
 
-## Learn More
+--------- Deploy
 
-To learn more about Next.js, take a look at the following resources:
+El proyecto está deployado en Vercel: [URL cuando lo subas]
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---------Tecnologías
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Next.js 15
+- TypeScript
+- Groq (para embeddings y chat)
+- Tailwind CSS
 
-## Deploy on Vercel
+---------Estructura
+/data           - Archivos de conocimiento (.txt)
+/app/api/answer - Endpoint que procesa las preguntas
+/app/page.tsx   - La interfaz
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+--------- Cómo funciona
+
+1. Lee los archivos de `/data`
+2. Los divide en chunks de ~800 caracteres
+3. Genera embeddings con Groq
+4. Cuando haces una pregunta, busca los chunks más relevantes
+5. Le pasa esos chunks a Llama 3.3 para que responda
+6. Te muestra la respuesta con las citas
+
+Desarrollado por Stephany Pleites 
