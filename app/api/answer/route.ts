@@ -74,8 +74,6 @@ async function generateEmbeddings(chunks: TextChunk[]): Promise<TextChunk[]> {
   
   for (let i = 0; i < chunks.length; i++) {
     try {
-      // Nota: Groq no tiene embeddings nativos, usamos un modelo de chat para simular
-      // En producción, usarías un servicio de embeddings real
       const response = await client.embeddings.create({
         model: 'nomic-embed-text',
         input: chunks[i].text,
@@ -85,7 +83,6 @@ async function generateEmbeddings(chunks: TextChunk[]): Promise<TextChunk[]> {
       console.log(`Embedding ${i + 1}/${chunks.length} generado`);
     } catch (error) {
       console.error(`Error generando embedding ${i}:`, error);
-      // Generar embedding dummy como fallback
       chunks[i].embedding = Array(768).fill(0).map(() => Math.random());
     }
   }
@@ -95,7 +92,6 @@ async function generateEmbeddings(chunks: TextChunk[]): Promise<TextChunk[]> {
 
 // Función principal para obtener o cargar embeddings
 async function getEmbeddings(): Promise<TextChunk[]> {
-  // Verificar si hay cache en memoria
   if (cachedData && Date.now() - cachedData.timestamp < 3600000) {
     console.log('Usando embeddings en cache');
     return cachedData.chunks;
@@ -148,29 +144,33 @@ export async function POST(req: NextRequest) {
         score: cosineSimilarity(questionEmbedding, chunk.embedding!),
       }))
       .sort((a, b) => b.score - a.score)
-      .slice(0, 3); // Top 3 más relevantes
+      .slice(0, 3);
     
-    // Construir contexto
+    // Construir contexto SIN mencionar fuentes en el texto
     const context = scoredChunks
-      .map((chunk, i) => `[Fuente ${i + 1}: ${chunk.source}]\n${chunk.text}`)
-      .join('\n\n---\n\n');
+      .map(chunk => chunk.text)
+      .join('\n\n');
     
-    // Generar respuesta con el modelo
+    // PROMPT MODIFICADO para respuestas naturales
     const completion = await client.chat.completions.create({
       model: 'llama-3.3-70b-versatile',
       messages: [
         {
           role: 'system',
-          content: `Eres un asistente útil que responde preguntas basándose únicamente en el contexto proporcionado. 
-Debes incluir citas específicas del texto entre comillas cuando sea relevante. 
-Si la información no está en el contexto, di que no tienes esa información.`,
+          content: `Eres un asistente experto y amigable. Responde las preguntas de forma natural y conversacional, como si estuvieras hablando con un amigo.
+
+Usa la información que se te proporciona para dar respuestas precisas y útiles. No menciones que estás consultando archivos o documentos - simplemente responde con confianza basándote en lo que sabes.
+
+Si incluyes información específica como precios, características o detalles técnicos, hazlo de forma fluida dentro de tu respuesta.
+
+Si no tienes información suficiente para responder, dilo de forma amable y sugiere cómo podrías ayudar de otra manera.`,
         },
         {
           role: 'user',
-          content: `Contexto:\n${context}\n\nPregunta: ${question}\n\nResponde basándote solo en el contexto anterior e incluye citas textuales relevantes.`,
+          content: `Información disponible:\n${context}\n\nPregunta del usuario: ${question}\n\nResponde de forma natural y conversacional.`,
         },
       ],
-      temperature: 0.3,
+      temperature: 0.7, // Aumentado para respuestas más naturales
       max_tokens: 500,
     });
     
@@ -179,7 +179,7 @@ Si la información no está en el contexto, di que no tienes esa información.`,
     // Extraer citas del contexto
     const citations = scoredChunks.map(chunk => ({
       source: chunk.source,
-      text: chunk.text.substring(0, 200) + '...', // Primeros 200 caracteres
+      text: chunk.text.substring(0, 200) + '...',
       relevance: chunk.score,
     }));
     
