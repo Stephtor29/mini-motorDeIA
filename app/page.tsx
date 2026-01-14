@@ -123,22 +123,6 @@ export default function Home() {
                 </p>
               </div>
             </div>
-
-            {/* Fuentes */}
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-3"> Fuentes consultadas:</h3>
-              <div className="flex flex-wrap gap-2">
-                {response.sources.map((source, i) => (
-                  <span
-                    key={i}
-                    className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium"
-                  >
-                    {source}
-                  </span>
-                ))}
-              </div>
-            </div>
-
        
           </div>
         )}
