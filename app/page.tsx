@@ -59,7 +59,7 @@ export default function Home() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-gray-800 mb-3">
-            🤖 Mini Motor de IA
+            Mini Motor de IA
           </h1>
           <p className="text-gray-600 text-lg">
             Pregunta cualquier cosa sobre nuestros productos y políticas
@@ -78,7 +78,7 @@ export default function Home() {
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
                 placeholder="Ejemplo: ¿Cuál es el precio del iPhone 15 Pro Max?"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none text-gray-900"
                 rows={3}
                 disabled={loading}
               />
@@ -98,7 +98,7 @@ export default function Home() {
                   Buscando respuesta...
                 </span>
               ) : (
-                '🔍 Buscar Respuesta'
+                ' Buscar Respuesta'
               )}
             </button>
           </form>
@@ -106,7 +106,7 @@ export default function Home() {
           {/* Error */}
           {error && (
             <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-700 text-sm">❌ {error}</p>
+              <p className="text-red-700 text-sm"> {error}</p>
             </div>
           )}
         </div>
@@ -116,7 +116,7 @@ export default function Home() {
           <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
             {/* Respuesta principal */}
             <div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">💬 Respuesta:</h2>
+              <h2 className="text-2xl font-bold text-gray-800 mb-4"> Respuesta:</h2>
               <div className="prose max-w-none">
                 <p className="text-gray-700 leading-relaxed whitespace-pre-line">
                   {response.answer}
@@ -126,7 +126,7 @@ export default function Home() {
 
             {/* Fuentes */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">📚 Fuentes consultadas:</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-3"> Fuentes consultadas:</h3>
               <div className="flex flex-wrap gap-2">
                 {response.sources.map((source, i) => (
                   <span
@@ -139,36 +139,13 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Citas */}
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">📝 Fragmentos relevantes:</h3>
-              <div className="space-y-3">
-                {response.citations.map((citation, i) => (
-                  <div
-                    key={i}
-                    className="p-4 bg-gray-50 border border-gray-200 rounded-lg"
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <span className="text-xs font-semibold text-indigo-600 uppercase">
-                        {citation.source}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        Relevancia: {(citation.relevance * 100).toFixed(1)}%
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600 italic">
-                      "{citation.text}"
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
+       
           </div>
         )}
 
         {/* Footer */}
-        <div className="text-center mt-12 text-gray-500 text-sm">
-          <p>🚀 Mini Motor de IA con Next.js + Groq + Embeddings</p>
+        <div className="text-center mt-12 text-gray-500  text-sm">
+          <p>🚀 Mini Motor de IA  - Desarrollado por Stephany Pleites </p>
         </div>
       </div>
     </div>
